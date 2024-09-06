@@ -95,4 +95,8 @@ termsAndConditions.addEventListener('change', () => {
     RebillyInstruments.update(newConfig);
 });
 
+async function handleDonation() {
+    //POST to makedoantion
+    // with jwt and invoiceId we mount instrument
+}
 
