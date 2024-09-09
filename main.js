@@ -1,3 +1,5 @@
+import RebillyAPI from "rebilly-js-sdk";
+
 RebillyInstruments.mount({
     publishableKey: 'pk_sandbox_xYh76FWucrGzClSBRDMHxUR9HsuuKM0xm_9I00V',
     organizationId: 'summer-nest---phronesis',
@@ -95,15 +97,44 @@ termsAndConditions.addEventListener('change', () => {
     RebillyInstruments.update(newConfig);
 });
 
-async function handleDonation() {
+const handleDonation = async (e) => {
     // get /api/hello
-    const response = await fetch('/api/hello');
-    const data = await response.text();
-    console.log(
-        'response from /api/hello',
-        data
-    );
+    console.log("handling donation");
+    e.preventDefault();
+
+    const form = document.getElementById('payment-form');
+    const formData = new FormData(form);
+
+    const amount = formData.get('amount');
+    const paymentType = formData.get('payment-type');
+
+    const body = {
+        amount: parseFloat(amount),
+        paymentType: paymentType,
+    };
+
+    const response = await fetch('/api/makedonation',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+
+    const data = await response.json();
+    const newConfig = {
+        items: [],
+        invoiceId: data.invoiceId,
+        jwt: data.jwt,
+    };
+
+    RebillyInstruments.update(newConfig);
+
+    document.getElementById('payment-form').style.display = 'none';
+
 }
 
-handleDonation();
+document.getElementById('payment-form').onsubmit = handleDonation;
+
 
