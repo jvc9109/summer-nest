@@ -96,7 +96,14 @@ termsAndConditions.addEventListener('change', () => {
 });
 
 async function handleDonation() {
-    //POST to makedoantion
-    // with jwt and invoiceId we mount instrument
+    // get /api/hello
+    const response = await fetch('/api/hello');
+    const data = await response.text();
+    console.log(
+        'response from /api/hello',
+        data
+    );
 }
+
+handleDonation();
 
