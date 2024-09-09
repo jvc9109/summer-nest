@@ -1,8 +1,8 @@
 {
   "name": "phronesis-summer-nest",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -10,5 +10,11 @@
   },
   "devDependencies": {
     "vite": "^5.4.1"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "express": "^4.19.2",
+    "rebilly-js-sdk": "^56.52.2",
+    "serverless-http": "^3.2.0"
   }
 }

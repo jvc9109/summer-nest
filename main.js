@@ -95,4 +95,15 @@ termsAndConditions.addEventListener('change', () => {
     RebillyInstruments.update(newConfig);
 });
 
+async function handleDonation() {
+    // get /api/hello
+    const response = await fetch('/api/hello');
+    const data = await response.text();
+    console.log(
+        'response from /api/hello',
+        data
+    );
+}
+
+handleDonation();
 
