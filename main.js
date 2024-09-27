@@ -1,118 +1,144 @@
-const bookingAmount = 2000;
+import RebillyAPI from "rebilly-js-sdk";
 
-function project6 () {
-    //when click button with id 20p-deposit, update RebillyInstruments
-    document.getElementById('20p-deposit').addEventListener('click', function() {
-        RebillyInstruments.destroy();
-        RebillyInstruments.mount({
-            publishableKey: 'pk_sandbox_xYh76FWucrGzClSBRDMHxUR9HsuuKM0xm_9I00V',
-            organizationId: 'summer-nest---phronesis',
-            websiteId: 'rebilly.com',
-            apiMode: 'sandbox',
-            money: {
-                amount: bookingAmount*0.2,
-                currency: 'USD'
+RebillyInstruments.mount({
+    publishableKey: 'pk_sandbox_xYh76FWucrGzClSBRDMHxUR9HsuuKM0xm_9I00V',
+    organizationId: 'summer-nest---phronesis',
+    websiteId: 'rebilly.com',
+    apiMode: 'sandbox',
+    items: [
+        {
+            planId: 'monthly',
+            quantity: 1,
+            thumbnail: 'https://api-sandbox.rebilly.com/files/file_01J4F2DA4KFCYRRWRWPKTWTRGT/permalink/c9cc5246-8a18-49e8-b552-c836e8e61803',
+        },
+    ],
+    paymentInstruments: {
+        address: {
+            show: ['email', 'phoneNumber', 'country', 'city'],
+        }
+    },
+    theme: {
+        colorPrimary: '#3D3839',
+    },
+    addons: [
+        {
+            planId: 'personalized-travel-plan',
+            quantity: 1,
+        },
+    ],
+    bumpOffer: [
+        {
+            planId: 'monthly-platinum',
+            quantity: 1,
+        },
+    ],
+    features: {
+        showConsentCheck: ['confirmation'],
+    },
+    i18n: {
+        fr: {
+            consentCheck: {
+                agreeToTOS: 'Acepto los [términos y condiciones](https://www.example.com/tos)',
+                consentSubscription: 'Acepto la [política de subscripción](https://www.example.com/tos)',
             },
-
-            paymentInstruments: {
-                address: {
-                    show: ['email', 'phoneNumber', 'country', 'city'],
-                }
+        },
+        en: {
+            consentCheck: {
+                agreeToTOS: 'I agree to the [terms of service](https://www.example.com/tos) and the [subscription billing policy](https://www.example.com/billing)',
+                consentSubscription: 'I agree to the [subscription conditions](https://www.example.com/tos)',
             },
-            theme: {
-                colorPrimary: '#3D3839',
-            }
-        });
-    });
+        },
+    },
+}).then(() => {
+});
 
-    document.getElementById('30p-deposit').addEventListener('click', function() {
-        RebillyInstruments.destroy();
-        RebillyInstruments.mount({
-            publishableKey: 'pk_sandbox_xYh76FWucrGzClSBRDMHxUR9HsuuKM0xm_9I00V',
-            organizationId: 'summer-nest---phronesis',
-            websiteId: 'rebilly.com',
-            apiMode: 'sandbox',
-            money: {
-                amount: bookingAmount*0.3,
-                currency: 'USD'
+// Optional
+RebillyInstruments.on('instrument-ready', (instrument) => {
+    console.info('instrument-ready', instrument);
+});
+RebillyInstruments.on('purchase-completed', (purchase) => {
+    console.info('purchase-completed', purchase);
+});
+
+const appState = {
+    isMonthly: true,
+    plan: ['yearly', 'monthly'],
+    bumpOfferPlan: ['yearly-platinum', 'monthly-platinum']
+};
+
+async function updatePlan(e) {
+    e.preventDefault();
+    e.target.disabled = true;
+
+    appState.isMonthly = !appState.isMonthly;
+
+    //const updatedLocale = appState.localeChanged ? 'es' : 'en';
+    updatePlanButton.textContent = appState.isMonthly ? 'Switch to yearly plan' : 'Switch to monthly plan';
+    const newConfig = {
+        items: [
+            {
+                planId: appState.plan[+appState.isMonthly],
+                quantity: 1,
+                thumbnail: 'https://api-sandbox.rebilly.com/files/file_01J4F2DA4KFCYRRWRWPKTWTRGT/permalink/c9cc5246-8a18-49e8-b552-c836e8e61803',
             },
-
-            paymentInstruments: {
-                address: {
-                    show: ['email', 'phoneNumber', 'country', 'city'],
-                }
+        ],
+        bumpOffer: [
+            {
+                planId: appState.bumpOfferPlan[+appState.isMonthly],
+                quantity: 1,
             },
-            theme: {
-                colorPrimary: '#3D3839',
-            }
-        });
-    });
-
-    document.getElementById('50p-deposit').addEventListener('click', function() {
-        RebillyInstruments.destroy();
-        RebillyInstruments.mount({
-            publishableKey: 'pk_sandbox_xYh76FWucrGzClSBRDMHxUR9HsuuKM0xm_9I00V',
-            organizationId: 'summer-nest---phronesis',
-            websiteId: 'rebilly.com',
-            apiMode: 'sandbox',
-            money: {
-                amount: bookingAmount*0.5,
-                currency: 'USD'
-            },
-
-            paymentInstruments: {
-                address: {
-                    show: ['email', 'phoneNumber', 'country', 'city'],
-                }
-            },
-            theme: {
-                colorPrimary: '#3D3839',
-            }
-        });
-    });
-
-    document.getElementById('custom-deposit').addEventListener('click', function() {
-        RebillyInstruments.destroy();
-        const customAmount = parseFloat(document.getElementById('deposit-amount').value);
-
-
-        RebillyInstruments.mount({
-            publishableKey: 'pk_sandbox_xYh76FWucrGzClSBRDMHxUR9HsuuKM0xm_9I00V',
-            organizationId: 'summer-nest---phronesis',
-            websiteId: 'rebilly.com',
-            apiMode: 'sandbox',
-            money: {
-                amount: Math.max(bookingAmount*0.2, Math.min(customAmount, bookingAmount )),
-                currency: 'USD'
-            },
-
-            paymentInstruments: {
-                address: {
-                    show: ['email', 'phoneNumber', 'country', 'city'],
-                }
-            },
-            theme: {
-                colorPrimary: '#3D3839',
-            }
-        });
-    });
+        ],
+    };
+    try {
+        await RebillyInstruments.update(newConfig);
+    } catch (error) {
+        console.log('Error updating instruments: ', error);
+    } finally {
+        e.target.disabled = false;
+    }
 }
 
-//take this json from /api/getinvoices make a table in html with ID, Due Time, Issued Time, Amount, Status, Payment Form URL, created time
+const updatePlanButton = document.getElementById('update-plan');
+updatePlanButton.addEventListener('click', updatePlan);
 
-fetch('/api/getinvoices')
-.then(response => response.json())
-.then(data => {
-    const table = document.getElementById('invoice-table');
-    data.invoices.forEach(invoice => {
-        const row = table.insertRow();
-        row.insertCell(0).textContent = invoice.id;
-        row.insertCell(1).textContent = invoice.dueTime;
-        row.insertCell(2).textContent = invoice.issuedTime;
-        row.insertCell(3).textContent = `${invoice.amount} $`;
-        row.insertCell(4).textContent = invoice.status;
-        row.insertCell(5).innerHTML = invoice.paymentFormUrl ? `<a href=${invoice.paymentFormUrl}> Pay Now </a>` : 'Paid';
-        row.insertCell(6).textContent = invoice.createdTime;
-    });
-});
+const handleDonation = async (e) => {
+    // get /api/hello
+    console.log("handling donation");
+    e.preventDefault();
+
+    const form = document.getElementById('payment-form');
+    const formData = new FormData(form);
+
+    const amount = formData.get('amount');
+    const paymentType = formData.get('payment-type');
+
+    const body = {
+        amount: parseFloat(amount),
+        paymentType: paymentType,
+    };
+
+    const response = await fetch('/api/makedonation',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+
+    const data = await response.json();
+    const newConfig = {
+        items: [],
+        invoiceId: data.invoiceId,
+        jwt: data.jwt,
+    };
+
+    RebillyInstruments.update(newConfig);
+
+    document.getElementById('payment-form').style.display = 'none';
+
+}
+
+document.getElementById('payment-form').onsubmit = handleDonation;
+
 
