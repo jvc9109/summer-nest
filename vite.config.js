@@ -22,7 +22,6 @@ export default defineConfig({
                 main: 'index.html',
                 invoices: 'invoices.html',
                 products: 'products.html',
-                debriefs: 'debriefs.html',
                 ...getHtmlFiles('debriefs')
             }
         }
