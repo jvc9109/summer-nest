@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debrief</title>
+</head>
+<body>
+<h1>
+    Colin & Jorge
+</h1>
+
+<h1>Project 9</h1>
+<h3>What made us smile</h3>
+<p>
+    Documentation was good, the feature was easy to enable
+</p>
+<h3>What was confusing, did you encounter any issues?</h3>
+<p>
+    - We had the error "Framepay cannot be initialized" error because we were mounting with both publishable key and JWT.  But there was no feedback to signal us as to what caused this error. We had to guess to fix it.
+    - Once we were mounting with the JWT and the invoiceId, the shipping was not applied when we were also passing items: [], so we had to remove that.  It wasn't clear why the shipping wasn't applied.
+    - We had to make sure to destroy() instruments before mounting again.
+    - We also got a 422 "Shipping is not available".  We had to configure a free shipping rate for it to work. The error message was not clear as to what was wrong since the error mentioned deliveryAddress.  We had to guess that we needed to configure a free shipping rate.
+
+    <pre>
+      	{
+	    "invalidFields": [
+	        {
+	            "field": "deliveryAddress",
+	            "message": "Shipping is not available"
+	        }
+	    ],
+	    "title": "The request is invalid",
+	    "status": 422,
+	    "error": "Data Validation Failed.",
+	    "details": [
+	        "Shipping is not available"
+	    ]
+	}
+</pre>
+
+</p>
+</body>
+</html>

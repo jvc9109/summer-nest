@@ -162,6 +162,99 @@ export async function handler(event, context) {
         });
     });
 
+    // create endpoint to create order and return invoiceId
+    router.post('/makeorder', async (req, res) => {
+        // take planId and quantity from req.body
+
+        const {planId, quantity} = req.body;
+
+        console.log(req.body);
+
+        const customer = await api.customers.get({id: 'cus_01J6HNWJ61NBF3JGA8XH76SVE2'});
+        const data = {
+            mode: 'passwordless',
+            customerId: customer.fields.id,
+        };
+        const {fields: login} = await api.customerAuthentication.login({
+            data,
+        });
+
+
+        const subsData =
+            {
+                customerId: 'cus_01J6HNWJ61NBF3JGA8XH76SVE2',
+                websiteId: 'rebilly.com',
+                orderType: 'one-time-order',
+                items: [
+                    {
+                        plan: {
+                            id: planId,
+                        },
+                        quantity: +quantity,
+                    }
+                ],
+
+            };
+        try {
+            const subscription = await api.subscriptions.create({data: subsData});
+
+
+            const {fields: exchangeToken} =
+                await api.customerAuthentication.exchangeToken({
+                    token: login.token,
+                    data: {
+                        acl: [
+                            {
+                                scope: {
+                                    organizationId: ['summer-nest---phronesis'],
+                                },
+                                permissions: [
+                                    "PostToken",
+                                    "PostDigitalWalletValidation",
+                                    "StorefrontGetAccount",
+                                    "StorefrontPatchAccount",
+                                    "StorefrontPostPayment",
+                                    "StorefrontGetTransactionCollection",
+                                    "StorefrontGetTransaction",
+                                    "StorefrontGetPaymentInstrumentCollection",
+                                    "StorefrontPostPaymentInstrument",
+                                    "StorefrontGetPaymentInstrument",
+                                    "StorefrontPatchPaymentInstrument",
+                                    "StorefrontPostPaymentInstrumentDeactivation",
+                                    "StorefrontGetWebsite",
+                                    "StorefrontGetInvoiceCollection",
+                                    "StorefrontGetInvoice",
+                                    "StorefrontGetProductCollection",
+                                    "StorefrontGetProduct",
+                                    "StorefrontPostReadyToPay",
+                                    "StorefrontPostReadyToPayout",
+                                    "StorefrontGetPaymentInstrumentSetup",
+                                    "StorefrontPostPaymentInstrumentSetup",
+                                    "StorefrontGetDepositRequest",
+                                    "StorefrontGetDepositStrategy",
+                                    "StorefrontGetPayoutRequest",
+                                    "StorefrontGetPayoutRequestCollection",
+                                    "StorefrontPatchPayoutRequest",
+                                ],
+                            },
+                        ],
+                        customClaims: {
+                            websiteId: 'rebilly.com',
+                            invoiceId: subscription.fields.recentInvoiceId,
+                        },
+                    },
+                });
+
+
+            return res.json({
+                jwt: exchangeToken.token,
+                invoiceId: subscription.fields.recentInvoiceId
+            });
+        } catch (e) {
+            console.log(e)
+        }
+    });
+
     app.use('/api/', router);
 
     return serverless(app)(event, context);

@@ -21,6 +21,8 @@ export default defineConfig({
             input: {
                 main: 'index.html',
                 invoices: 'invoices.html',
+                products: 'products.html',
+                debriefs: 'debriefs.html',
                 ...getHtmlFiles('debriefs')
             }
         }
