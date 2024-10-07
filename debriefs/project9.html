@@ -19,11 +19,26 @@
 </p>
 <h3>What was confusing, did you encounter any issues?</h3>
 <p>
-    - We had the error "Framepay cannot be initialized" error because we were mounting with both publishable key and JWT.  But there was no feedback to signal us as to what caused this error. We had to guess to fix it.
-    - Once we were mounting with the JWT and the invoiceId, the shipping was not applied when we were also passing items: [], so we had to remove that.  It wasn't clear why the shipping wasn't applied.
-    - We had to make sure to destroy() instruments before mounting again.
-    - We also got a 422 "Shipping is not available".  We had to configure a free shipping rate for it to work. The error message was not clear as to what was wrong since the error mentioned deliveryAddress.  We had to guess that we needed to configure a free shipping rate.
-
+<ul>
+	<li>
+    We had the error "Framepay cannot be initialized" error because we were mounting with both publishable key and JWT.  But there was no feedback to signal us as to what caused this error. We had to guess to fix it.
+		<br><strong>Improvement would be better feedback in the console about why we are getting this error</strong>
+	</li>
+	<br>
+	<li>
+    Once we were mounting with the JWT and the invoiceId, the shipping was not applied when we were also passing items: [], so we had to remove that.  It wasn't clear why the shipping wasn't applied.
+	<br><strong>Improvement would be better feedback in the console, are we allowed to pass invoiceId and items?  If not perhaps raise an error</strong>
+	</li>
+	<br>
+	<li>
+    We had to make sure to destroy() instruments before mounting again.
+	</li>
+	<br>
+	<li>
+    We also got a 422 "Shipping is not available".  We had to configure a free shipping rate for it to work. The error message was not clear as to what was wrong since the error mentioned deliveryAddress.  We had to guess that we needed to configure a free shipping rate.
+		<br><strong>The error below was a bit hard to decipher, since it was raised on "deliveryAddress".  Should there be a default shipping rate?</strong>
+	</li>
+</ul>
     <pre>
       	{
 	    "invalidFields": [
