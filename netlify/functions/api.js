@@ -255,6 +255,33 @@ export async function handler(event, context) {
         }
     });
 
+    router.post('/funnel', async (req, res) => {
+
+        const {tokenId} = req.body;
+
+        const transactionData = {
+            customerId: 'cus_01J6HNWJ61NBF3JGA8XH76SVE2',
+            type: 'sale',
+            websiteId: 'rebilly.com',
+            paymentInstruction: {
+                token: tokenId,
+            },
+            currency: 'USD',
+            amount: 10.99,
+            description: 'funnel',
+        };
+
+        try {
+            const transaction = await api.transactions.create({data: transactionData});
+            return res.json({result: transaction.fields.result});
+
+        } catch (e) {
+            console.log(e)
+
+        }
+
+    });
+
     app.use('/api/', router);
 
     return serverless(app)(event, context);
