@@ -282,6 +282,89 @@ export async function handler(event, context) {
 
     });
 
+    router.post('/deposit-request', async (req, res) => {
+
+        console.log(req.body);
+
+        const customerId = 'cus_01J6HNWJ61NBF3JGA8XH76SVE2';
+        const response = {};
+        const data = {
+            mode: "passwordless",
+            customerId,
+        };
+
+        const rebilly = RebillyAPI({
+            apiKey: process.env.REBILLY_API_KEY,
+            organizationId: 'summer-nest---phronesis',
+            sandbox: true
+        });
+
+        const { fields: login } = await rebilly.customerAuthentication.login({
+            data,
+        });
+
+        const { fields: exchangeToken } =
+            await rebilly.customerAuthentication.exchangeToken({
+                token: login.token,
+                data: {
+                    acl: [
+                        {
+                            scope: {
+                                organizationId: ["summer-nest---phronesis"],
+                            },
+                            permissions: [
+                                "PostToken",
+                                "PostDigitalWalletValidation",
+                                "StorefrontGetAccount",
+                                "StorefrontPatchAccount",
+                                "StorefrontPostPayment",
+                                "StorefrontGetTransactionCollection",
+                                "StorefrontGetTransaction",
+                                "StorefrontGetPaymentInstrumentCollection",
+                                "StorefrontPostPaymentInstrument",
+                                "StorefrontGetPaymentInstrument",
+                                "StorefrontPatchPaymentInstrument",
+                                "StorefrontPostPaymentInstrumentDeactivation",
+                                "StorefrontGetWebsite",
+                                "StorefrontGetInvoiceCollection",
+                                "StorefrontGetInvoice",
+                                "StorefrontGetProductCollection",
+                                "StorefrontGetProduct",
+                                "StorefrontPostReadyToPay",
+                                "StorefrontGetPaymentInstrumentSetup",
+                                "StorefrontPostPaymentInstrumentSetup",
+                                "StorefrontGetDepositRequest",
+                                "StorefrontGetDepositStrategy",
+                                "StorefrontPostDeposit",
+                            ],
+                        },
+                    ],
+                    customClaims: {
+                        websiteId: 'rebilly.com',
+                    },
+                },
+            });
+
+        const requestDepositData = {
+            websiteId: 'rebilly.com',
+            customerId: 'cus_01J6HNWJ61NBF3JGA8XH76SVE2',
+            currency: "USD",
+            amounts: [10, 20, 30, 40],
+            amountLimits: {
+                "minimum": 10,
+                "maximum": 5000
+            },
+        };
+
+        const { fields: depositFields } = await rebilly.depositRequests.create({
+            data: requestDepositData,
+        });
+
+        response.token = exchangeToken.token;
+        response.depositRequestId = depositFields.id;
+        res.send(response);
+    });
+
     app.use('/api/', router);
 
     return serverless(app)(event, context);
