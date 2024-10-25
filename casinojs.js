@@ -1,32 +1,25 @@
-const customerId = "cus_01HMW4HF2QMJZ3EJKEQ7T04TFQ";
+const customerId = "cus_01J6HNWJ61NBF3JGA8XH76SVE2";
 
-(async () => {
-    const response = await fetch("/api/deposit-request", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        },
-        body: JSON.stringify({ customerId }),
+document.querySelectorAll(".currency-button").forEach( (button) => {
+    button.addEventListener("click", async (e) => {
+        // check if button ID cad-button or usd-button to determine currency
+        const currency = e.target.id === "cad-button" ? "CAD" : "USD";
+        const response = await fetch("/api/deposit-request", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({ customerId, currency }),
+        });
+        const { token, depositRequestId } = await response.json();
+        RebillyInstruments.destroy();
+        RebillyInstruments.mount({
+            apiMode: "sandbox",
+            deposit: {
+                depositRequestId,
+            },
+            jwt: token,
+        });
     });
-    console.log(response);
-    const { token, depositRequestId } = await response.json();
-
-    // Mount Rebilly Instruments
-    RebillyInstruments.mount({
-        apiMode: "sandbox",
-        deposit: {
-            depositRequestId,
-        },
-        jwt: token,
-    });
-
-    RebillyInstruments.on("instrument-ready", (instrument) => {
-        console.info("instrument-ready", instrument);
-    });
-
-    RebillyInstruments.on("purchase-completed", (purchase) => {
-        console.info("purchase-completed", purchase);
-    });
-
-})();
+});

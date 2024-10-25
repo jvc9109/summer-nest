@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debrief</title>
+</head>
+<body>
+<h1>
+    Colin & Jorge
+</h1>
+
+<h1>Project 12</h1>
+<a href="/casino">Link to the project</a>
+
+<h3>What made us smile</h3>
+    <li>
+        Configuring the deposit strategies was fairly straightforward.
+    </li>
+<p>
+
+</p>
+<h3>What was confusing, did you encounter any issues?</h3>
+<ul>
+    <li>
+        In general the flow is not clear in the docs. The "deposit link" is mentioned but is not included in the example response or in the response definition.
+    </li>
+    <li>
+        It's not clear if we need to initiate the transaction with the deposit request ID or to follow this link.
+    </li>
+    <li>
+        Clicking on deposit strategy copies ID instead of opening edit mode. We kept clicking it to try to edit the strategy.
+    </li>
+    <li>
+        When debugging 422 error, the API logs do not show up quickly. Need to keep reloading to see it.
+    </li>
+    <li>
+        The increment configuration in the deposit strategy is not clear. Without testing it's not clear which amounts will show up.
+    </li>
+    <li>
+        Should instruments support multiple currencies? We had to add a currency selector manually.
+    </li>
+    <li>
+        Anytime the customer changes the currency selection, we create a "dangling" deposit request. A bad actor could flood the system with deposit requests.
+    </li>
+</ul>
+
+
+</body>
+</html>

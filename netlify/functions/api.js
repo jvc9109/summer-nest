@@ -286,7 +286,11 @@ export async function handler(event, context) {
 
         console.log(req.body);
 
-        const customerId = 'cus_01J6HNWJ61NBF3JGA8XH76SVE2';
+
+
+        const {customerId, currency} = req.body;
+
+        console.log('currency' + currency);
         const response = {};
         const data = {
             mode: "passwordless",
@@ -348,12 +352,8 @@ export async function handler(event, context) {
         const requestDepositData = {
             websiteId: 'rebilly.com',
             customerId: 'cus_01J6HNWJ61NBF3JGA8XH76SVE2',
-            currency: "USD",
-            amounts: [10, 20, 30, 40],
-            amountLimits: {
-                "minimum": 10,
-                "maximum": 5000
-            },
+            currency: currency,
+            strategyId: currency === 'CAD' ? "dep_str_01JB00M8CYJNEE3Y4NAEGS79YM" : "dep_str_01JB00JHEV7PD470C8NYBVJHC2"
         };
 
         const { fields: depositFields } = await rebilly.depositRequests.create({
