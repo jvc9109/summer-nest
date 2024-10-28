@@ -22,22 +22,22 @@
 <h3>What was confusing, did you encounter any issues?</h3>
 <ul>
     <li>
-        In general the flow is not clear in the docs. The "deposit link" is mentioned but is not included in the example response or in the response definition.
+        In general the flow is not clear in the docs. The "deposit link" is mentioned in the request description in the API but is not included in the example response or in the response definition. It's hard to know what is meant by the "deposit link" when there's nothing in the API specifications about it (except for the word "deposit" in the enum for the links - hard to notice).
     </li>
     <li>
-        It's not clear if we need to initiate the transaction with the deposit request ID or to follow this link.
+        It's not clear if we need to initiate the transaction with the deposit request ID, since the link is not included in the example response.
     </li>
     <li>
-        Clicking on deposit strategy copies ID instead of opening edit mode. We kept clicking it to try to edit the strategy.
+        In Recomm - clicking on deposit strategy copies ID instead of opening edit mode. We kept clicking it to try to edit the strategy.
     </li>
     <li>
-        When debugging 422 error, the API logs do not show up quickly. Need to keep reloading to see it.
+        When debugging 422 error, the API logs do not show up quickly. Due to this delay we needed to keep reloading for up to 30 seconds to see the recent API logs.
     </li>
     <li>
         The increment configuration in the deposit strategy is not clear. Without testing it's not clear which amounts will show up.
     </li>
     <li>
-        Should instruments support multiple currencies? We had to add a currency selector manually.
+        Should instruments support multiple currencies? We had to add a currency selector manually.  The currency of the deposit is not shown in the hosted deposit screen.
     </li>
     <li>
         Anytime the customer changes the currency selection, we create a "dangling" deposit request. A bad actor could flood the system with deposit requests.
